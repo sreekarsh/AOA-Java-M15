@@ -1,49 +1,104 @@
+# EX 5C Graph Coloring
 
-# EX 5C Graph coloring
-## DATE:
+## DATE: 2-11-2025
+
 ## AIM:
-To write a Java program to for given constraints.
-Problem Description:
-In a hilly region, several radio towers are installed to provide communication services. However, due to signal interference, two adjacent towers (i.e., in communication range of each other) must not use the same frequency channel.
 
-You are given N radio towers and their communication ranges represented as an undirected graph. Your task is to assign channels (colors) to these towers using at most M channels such that no two adjacent towers use the same channel.
+To write a Java program to determine whether N radio towers can be assigned at most M frequency channels such that no two adjacent towers share the same channel, using the **Graph Coloring (Backtracking)** approach.
 
-Write a program to determine if such an assignment is possible or not.
+---
 
-Input Format:
-First line contains two integers: N (number of towers), and M (number of available frequency channels).
+## Algorithm:
 
-Next line contains an integer E — number of edges representing the communication range.
+1. Read inputs: number of towers **N**, number of channels **M**, and number of edges **E**.
+2. Build an adjacency list to represent the undirected graph of tower communication range.
+3. Maintain a `color[]` array of size `N` initialized to 0 (uncolored).
+4. Use a **recursive backtracking function**:
 
-Next E lines contain two integers u and v — representing that tower u and tower v are within range (0-based index).
+   * For each tower, try assigning a channel `1` to `M`.
+   * Before assigning, check using `isSafe()` that no adjacent tower has the same color.
+5. If assigning a color leads to a valid configuration for all towers → return **true**.
+6. If no color can be assigned for a tower → backtrack and try another color.
+7. If no assignment is possible → print **"NO"**, otherwise **"YES"**.
 
-Output Format:
-Print "YES" if it's possible to assign frequencies to towers such that no two adjacent towers have the same frequency.
-
-Otherwise, print "NO".
-
-<img width="182" height="440" alt="image" src="https://github.com/user-attachments/assets/b32078a2-c79d-4a25-88c4-e51144b5456f" />
-
-
-## Algorithm
-1. 
-2. 
-3. 
-4.  
-5.   
+---
 
 ## Program:
-```
+
+```java
 /*
 Program to implement Reverse a String
-Developed by: 
-Register Number:  
+Developed by: MASINA SREE KARSH
+Register Number: 212223100033
 */
+
+import java.util.*;
+
+public class RadioTowerChannelAssignment {
+
+    private static boolean isSafe(List<List<Integer>> graph, int node, int[] color, int c) {
+        for (int neighbor : graph.get(node)) {
+            if (color[neighbor] == c)
+                return false;
+        }
+        return true;
+    }
+
+    public static boolean isColorable(List<List<Integer>> graph, int[] color, int node, int m, int n) {
+        if (node == n)
+            return true;
+
+        for (int c = 1; c <= m; c++) {
+            if (isSafe(graph, node, color, c)) {
+                color[node] = c;
+
+                if (isColorable(graph, color, node + 1, m, n))
+                    return true;
+
+                color[node] = 0;
+            }
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        int e = sc.nextInt();
+
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++)
+            graph.add(new ArrayList<>());
+
+        for (int i = 0; i < e; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+        }
+
+        int[] color = new int[n];
+
+        if (isColorable(graph, color, 0, m, n))
+            System.out.println("YES");
+        else
+            System.out.println("NO");
+
+        sc.close();
+    }
+}
 ```
+
+---
 
 ## Output:
 
+<img width="931" height="549" alt="image" src="https://github.com/user-attachments/assets/fdced9d4-60e9-4db6-a69c-b2cbf53acb7d" />
 
+
+---
 
 ## Result:
-The program successfully implemented and the expected output is verified.
+
+The program was successfully implemented using the **Graph Coloring Backtracking** method and the expected output was verified.
